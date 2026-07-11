@@ -16,6 +16,7 @@ include_directories(include)
 
 add_executable(my_app
 src/main.c
+src/math_utils.c
 )
 
 # -------------------------
@@ -26,7 +27,7 @@ src/main.c
 
 add_executable(test_app
 tests/test_math.c
-src/main.c
+src/math_utils.c
 )
 
 # -------------------------
