@@ -5,43 +5,58 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# -------- Firmware Target --------
-add_executable(firmware.elf
-    src/main.c
-    src/math_utils.c
-)
+# ============================================
+# Detect ARM vs HOST BUILD
+# ============================================
+if(CMAKE_C_COMPILER MATCHES "arm-none-eabi")
 
-# ARM compile options
-target_compile_options(firmware.elf PRIVATE
-    -mcpu=cortex-m4
-    -mthumb
-    -ffreestanding
-)
+    message(STATUS "Building Firmware for ARM")
 
-# ARM link options
-target_link_options(firmware.elf PRIVATE
-    -mcpu=cortex-m4
-    -mthumb
-    -nostdlib
-    -nostartfiles
-    -Wl,--gc-sections
-    -T${CMAKE_SOURCE_DIR}/linker.ld
-    -Wl,-Map=${CMAKE_BINARY_DIR}/firmware.map
-)
+    # -------- Firmware Target --------
+    add_executable(firmware.elf
+        src/main.c
+        src/math_utils.c
+    )
 
-# Generate HEX & BIN
-find_program(OBJCOPY arm-none-eabi-objcopy REQUIRED)
+    # ARM compile options
+    target_compile_options(firmware.elf PRIVATE
+        -mcpu=cortex-m4
+        -mthumb
+        -ffreestanding
+    )
 
-add_custom_command(
-    TARGET firmware.elf POST_BUILD
-    COMMAND ${OBJCOPY} -O ihex firmware.elf firmware.hex
-    COMMAND ${OBJCOPY} -O binary firmware.elf firmware.bin
-    COMMENT "Generating HEX and BIN"
-)
+    # ARM link options
+    target_link_options(firmware.elf PRIVATE
+        -mcpu=cortex-m4
+        -mthumb
+        -nostdlib
+        -nostartfiles
+        -Wl,--gc-sections
+        -T${CMAKE_SOURCE_DIR}/linker.ld
+        -Wl,-Map=${CMAKE_BINARY_DIR}/firmware.map
+    )
 
-# -------- Test Target (ONLY for host machine) --------
-if(NOT CMAKE_C_COMPILER MATCHES "arm-none-eabi")
+    # Generate HEX & BIN
+    find_program(OBJCOPY arm-none-eabi-objcopy REQUIRED)
 
+    add_custom_command(
+        TARGET firmware.elf POST_BUILD
+        COMMAND ${OBJCOPY} -O ihex firmware.elf firmware.hex
+        COMMAND ${OBJCOPY} -O binary firmware.elf firmware.bin
+        COMMENT "Generating HEX and BIN"
+    )
+
+else()
+
+    message(STATUS "Building for Host (Linux)")
+
+    # -------- Host App --------
+    add_executable(my_app
+        src/main.c
+        src/math_utils.c
+    )
+
+    # -------- Test Target --------
     add_executable(test_app
         tests/test_math.c
         src/math_utils.c
@@ -51,5 +66,3 @@ if(NOT CMAKE_C_COMPILER MATCHES "arm-none-eabi")
     add_test(NAME RunTests COMMAND test_app)
 
 endif()
-
-
