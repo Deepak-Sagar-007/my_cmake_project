@@ -27,18 +27,32 @@ pipeline {
             }
         }
 
-  stage('Build') {
+stage('Build Firmware (ARM)') {
     steps {
         sh '''
-        rm -rf build   # ✅ VERY IMPORTANT
-        mkdir build
-        cd build
+        rm -rf build_arm
+        mkdir build_arm
+        cd build_arm
 
         cmake .. \
         -DCMAKE_TOOLCHAIN_FILE=../arm-gcc-toolchain.cmake \
         -DCMAKE_C_COMPILER=arm-none-eabi-gcc
 
         make
+        '''
+    }
+}
+
+stage('Build & Test (Linux)') {
+    steps {
+        sh '''
+        rm -rf build_host
+        mkdir build_host
+        cd build_host
+
+        cmake ..
+        make
+        ctest
         '''
     }
 }
