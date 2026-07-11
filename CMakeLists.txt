@@ -1,16 +1,40 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(CProject C)
+project(my_cmake_project C)
 
 set(CMAKE_C_STANDARD 11)
 
+# Include headers
+
 include_directories(include)
 
-# Main executable
-add_executable(my_app src/main.c)
+# -------------------------
 
-# Test executable
-add_executable(test_app tests/test_math.c)
+# Main Application
+
+# -------------------------
+
+add_executable(my_app
+src/main.c
+)
+
+# -------------------------
+
+# Test Application
+
+# -------------------------
+
+add_executable(test_app
+tests/test_math.c
+src/main.c
+)
+
+# -------------------------
+
+# Enable Testing
+
+# -------------------------
 
 enable_testing()
+
 add_test(NAME RunTests COMMAND test_app)
