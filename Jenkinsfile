@@ -30,9 +30,9 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                mkdir -p ${BUILD_DIR}
-                cd ${BUILD_DIR}
-                cmake ..
+              mkdir -p build
+               cd build
+               cmake .. -DCMAKE_TOOLCHAIN_FILE=../arm-gcc-toolchain.cmake
                 make
                 '''
             }
