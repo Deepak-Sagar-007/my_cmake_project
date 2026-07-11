@@ -39,11 +39,17 @@ add_custom_command(
     COMMENT "Generating HEX and BIN"
 )
 
-# -------- Test Target --------
-add_executable(test_app
-    tests/test_math.c
-    src/math_utils.c
-)
+# -------- Test Target (ONLY for host machine) --------
+if(NOT CMAKE_C_COMPILER MATCHES "arm-none-eabi")
 
-enable_testing()
-add_test(NAME RunTests COMMAND test_app)
+    add_executable(test_app
+        tests/test_math.c
+        src/math_utils.c
+    )
+
+    enable_testing()
+    add_test(NAME RunTests COMMAND test_app)
+
+endif()
+
+
