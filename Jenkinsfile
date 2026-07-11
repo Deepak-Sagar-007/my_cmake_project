@@ -27,16 +27,21 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh '''
-              mkdir -p build
-               cd build
-               cmake .. -DCMAKE_TOOLCHAIN_FILE=../arm-gcc-toolchain.cmake
-                make
-                '''
-            }
-        }
+  stage('Build') {
+    steps {
+        sh '''
+        rm -rf build   # ✅ VERY IMPORTANT
+        mkdir build
+        cd build
+
+        cmake .. \
+        -DCMAKE_TOOLCHAIN_FILE=../arm-gcc-toolchain.cmake \
+        -DCMAKE_C_COMPILER=arm-none-eabi-gcc
+
+        make
+        '''
+    }
+}
 
         stage('Test') {
             steps {
