@@ -6,7 +6,7 @@ remote: 'https://github.com/Deepak-Sagar-007/shared_library.git']
 pipeline {
 agent { label 'linux-node1' }
 
-```
+
 options {
     timestamps()
 }
@@ -58,6 +58,6 @@ stages {
         }
     }
 }
-```
+
 
 }
