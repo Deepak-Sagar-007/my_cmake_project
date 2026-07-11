@@ -1,11 +1,13 @@
-
 #include "math_utils.h"
 
-int main() {
-    printf("Hello from CMake C Project!\n");
+int main(void) {
 
     int result = add(2, 3);
-    printf("2 + 3 = %d\n", result);
+
+    // Infinite loop (firmware style)
+    while (1) {
+        // You can inspect 'result' in debugger
+    }
 
     return 0;
 }
